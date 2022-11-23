@@ -11,8 +11,7 @@ const PORT = process.env.PORT || 3500
 connectDB()
 
 app.use(compression({
-    level: 6,
-    threshold: 1*1000,
+    level: 6
 }))
 
 app.use(express.json())
@@ -35,11 +34,11 @@ app.all('*', (req, res) => {
 
 mongoose.connection.once('open', () => {
     console.log('Connected to MongoDB')
-    
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
 })
 
 mongoose.connection.on('error', err => {
     console.log(err)
 })
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+module.exports = app;
