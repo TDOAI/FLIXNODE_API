@@ -74,7 +74,7 @@ const getSlider = asyncHandler(async(req, res) => {
         res.json(result)
     }
     else {
-        const result = myCache.get( `popular/movie` );
+        const result = myCache.get( `slider` );
         res.json(result);
     }
 })
