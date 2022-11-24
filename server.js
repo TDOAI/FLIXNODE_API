@@ -4,6 +4,7 @@ const express = require('express');
 const compression = require('compression');
 const connectDB = require('./config/dbConn')
 const mongoose = require('mongoose')
+const axios = require('axios')
 
 const app = express();
 const PORT = process.env.PORT || 3500
@@ -11,7 +12,7 @@ const PORT = process.env.PORT || 3500
 connectDB()
 
 app.use(compression({
-    level: 6
+    level: 9
 }))
 
 app.use(express.json())
@@ -19,6 +20,7 @@ app.use(express.json())
 app.use('/', express.static(path.join(__dirname, 'public')));
 
 app.use('/', require('./routes/root'))
+app.use('/slider', require('./routes/sliderRoute'))
 app.use('/popular', require('./routes/popularRoutes'))
 
 app.all('*', (req, res) => {
@@ -31,6 +33,8 @@ app.all('*', (req, res) => {
         res.type('txt').send('404 Not Found')
     }
 })
+
+
 
 mongoose.connection.once('open', () => {
     console.log('Connected to MongoDB')

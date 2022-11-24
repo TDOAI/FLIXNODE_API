@@ -13,7 +13,7 @@ const getPopular = asyncHandler(async (req, res) => {
         value = myCache.get( `popular/movie` );
         if ( value == undefined ) {
             const result = await Movie.find(query).limit(top25).sort(sort).lean()
-            myCache.set( `popular/movie`, result, 10 );
+            myCache.set( `popular/movie`, result, 28800 );
             return res.json(result)
         }
         else {
@@ -25,7 +25,7 @@ const getPopular = asyncHandler(async (req, res) => {
         value = myCache.get( `popular/tv` );
         if ( value == undefined ) {
             const result = await TV.find(query).limit(top25).sort(sort).lean()
-            myCache.set( `popular/tv`, result, 10 );
+            myCache.set( `popular/tv`, result, 28800 );
             return res.json(result)
         }
         else {
