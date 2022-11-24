@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3500
 connectDB()
 
 app.use(compression({
-    level: 9
+    level: 6
 }))
 
 app.use(express.json())
@@ -21,6 +21,7 @@ app.use('/', express.static(path.join(__dirname, 'public')));
 app.use('/', require('./routes/root'))
 app.use('/slider', require('./routes/sliderRoute'))
 app.use('/popular', require('./routes/popularRoutes'))
+app.use('/genre', require('./routes/genresRoute'))
 
 app.all('*', (req, res) => {
     res.status(404)
