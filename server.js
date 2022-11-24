@@ -4,7 +4,6 @@ const express = require('express');
 const compression = require('compression');
 const connectDB = require('./config/dbConn')
 const mongoose = require('mongoose')
-const axios = require('axios')
 
 const app = express();
 const PORT = process.env.PORT || 3500
