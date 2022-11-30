@@ -12,7 +12,7 @@ const getPopular = asyncHandler(async (req, res) => {
         value = myCache.get( 'popular/movie' );
         if ( value == undefined ) {
             const result = await Card.find(query).where({ media_type: 'movie' }).sort(sort).limit(top).lean()
-            myCache.set( 'popular/movie', response, 10800 );
+            myCache.set( 'popular/movie', result, 10800 );
             return res.json(result)
         }
         else {
@@ -24,7 +24,7 @@ const getPopular = asyncHandler(async (req, res) => {
         value = myCache.get( 'popular/tv' );
         if ( value == undefined ) {
             const result = await Card.find(query).where({ media_type: 'tv' }).sort(sort).limit(top).lean()
-            myCache.set( 'popular/tv', response, 10800 );
+            myCache.set( 'popular/tv', result, 10800 );
             return res.json(result)
         }
         else {
