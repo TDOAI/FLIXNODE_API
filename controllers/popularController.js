@@ -1,5 +1,4 @@
-const Movie = require('../models/Movie')
-const TV = require('../models/TV')
+const Card = require('../models/Card')
 const asyncHandler = require('express-async-handler')
 const NodeCache = require( "node-cache" )
 const myCache = new NodeCache( { stdTTL: 100, checkperiod: 600 } )
@@ -8,28 +7,28 @@ const getPopular = asyncHandler(async (req, res) => {
     const type = req.params.type
     const query = {};
     const sort = { popularity: -1 };
-    const top25 = 25
+    const top = 30
     if ( type == 'movie' ) {
-        value = myCache.get( `popular/movie` );
+        value = myCache.get( 'popular/movie' );
         if ( value == undefined ) {
-            const result = await Movie.find(query).limit(top25).sort(sort).lean()
-            myCache.set( `popular/movie`, result, 28800 );
+            const result = await Card.find(query).where({ media_type: 'movie' }).sort(sort).limit(top).lean()
+            myCache.set( 'popular/movie', response, 10800 );
             return res.json(result)
         }
         else {
-            const result = myCache.get( `popular/movie` );
+            const result = myCache.get( 'popular/movie' );
             res.json(result);
         }
     }
     else if (type == 'tv') {
-        value = myCache.get( `popular/tv` );
+        value = myCache.get( 'popular/tv' );
         if ( value == undefined ) {
-            const result = await TV.find(query).limit(top25).sort(sort).lean()
-            myCache.set( `popular/tv`, result, 28800 );
+            const result = await Card.find(query).where({ media_type: 'tv' }).sort(sort).limit(top).lean()
+            myCache.set( 'popular/tv', response, 10800 );
             return res.json(result)
         }
         else {
-            const result = myCache.get( `popular/tv` );
+            const result = myCache.get( 'popular/tv' );
             res.json(result);
         }
     }

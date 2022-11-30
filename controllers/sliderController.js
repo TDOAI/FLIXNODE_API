@@ -1,8 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const NodeCache = require( "node-cache" );
 const myCache = new NodeCache( { stdTTL: 100, checkperiod: 600 } )
-const Movie = require('../models/Movie')
-const TV = require('../models/TV')
+const Card = require('../models/Card')
 const fetch = (...args) =>
 	import('node-fetch').then(({default: fetch}) => fetch(...args));
 
@@ -27,7 +26,7 @@ async function getData() {
 
 async function check_movie(res_movie, array) {
     const promise1 = await (res_movie|| []).map(async card => {
-        const movies_FromDb = await Movie.findOne({ _id: card.id }).lean()
+        const movies_FromDb = await Card.findOne({ tmdb_id: card.id, media_type: 'movie' }).lean()
             if (movies_FromDb !== null && card.vote_average > 7) {
                 array.push(movies_FromDb);
             }
@@ -37,7 +36,7 @@ async function check_movie(res_movie, array) {
 
 async function check_tv(res_tv, array) {
     const promise1 = await (res_tv|| []).map(async card => {
-        const tv_FromDb = await TV.findOne({ _id: card.id }).lean()
+        const tv_FromDb = await Card.findOne({ tmdb_id: card.id, media_type: 'tv' }).lean()
             if (tv_FromDb !== null && card.vote_average > 7.6) {
                 array.push(tv_FromDb);
             }
@@ -63,18 +62,18 @@ async function main() {
 
 
 const getSlider = asyncHandler(async(req, res) => {
-    value = myCache.get( `slider` );
+    value = myCache.get( 'slider' );
     if ( value == undefined ) {
         const resp = await main();
         const result = {
             page: 'slider',
             results: resp
         }
-        myCache.set( `slider`, result, 28800 );
+        myCache.set( 'slider', result, 3600 );
         res.json(result)
     }
     else {
-        const result = myCache.get( `slider` );
+        const result = myCache.get( 'slider' );
         res.json(result);
     }
 })

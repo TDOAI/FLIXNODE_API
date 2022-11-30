@@ -1,13 +1,12 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
-const TVsSchema = new mongoose.Schema({
-    _id: { type: Number },
+const CardsSchema = new mongoose.Schema({
+    tmdb_id: { type: Number },
     stream_id: { type: String, index: true },
     updated: { type: Date, default: Date.now },
-    media_type: { type: String },
+    media_type: { type: String, index: true },
     backdrop_path: { type: String },
     poster_path: { type: String },
-    blurhash: { type: String },
     original_title: { type: String, sparse:true },
     title: { type: String, index:true },
     tagline: { type: String, sparse:true },
@@ -40,4 +39,13 @@ const TVsSchema = new mongoose.Schema({
 }
 )
 
-module.exports = mongoose.model('Tvshow', TVsSchema)
+const MoviesErrorSchema = new mongoose.Schema({
+    tmdb_id: { type: String },
+    stream_id: { type: String, index: true }
+},
+{
+    versionKey: false
+}
+)
+
+module.exports = mongoose.model('Card', CardsSchema)

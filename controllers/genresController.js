@@ -1,4 +1,5 @@
 const asyncHandler = require('express-async-handler')
+const Card = require('../models/Card')
 const Genre = require('../models/Genres')
 const NodeCache = require( "node-cache" )
 const myCache = new NodeCache( { stdTTL: 100, checkperiod: 600 } )
@@ -77,19 +78,6 @@ async function tv_only (res_tv, cross) {
     return res_tv
 }
 
-// async function sort(array){
-//     const sortarr = array.sort(function(a, b){
-//         let nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
-//         if (nameA < nameB)
-//             return -1;
-//         if (nameA > nameB)
-//             return 1;
-//         return 0;
-//     })
-//     sortarr.unshift({ id: 0, name: 'Popular & Latest'})
-//     return sortarr
-// }
-
 async function main () {
     const res_movie = await fetch_movie()
     const res_tv = await fetch_tv()
@@ -111,22 +99,104 @@ async function main () {
     })
     const sorts = {name: 1}
     const result = await Genre.find({}).sort(sorts).lean()
-    result.unshift({ id: 0, name: 'Popular & Latest'})
+    result.unshift({ _id: 0, name: 'Popular & Latest'})
     return result
 }
 
 const getGenreList = asyncHandler(async(req, res) => {
-    const resp = await main()
-    const result = {
-        page: "genre/list",
-        genres: resp
+    value = myCache.get( 'genre/list' );
+    if (value == undefined) {
+        const resp = await main()
+        const result = {
+            page: "genre/list",
+            genres: resp
+        }
+        myCache.set( 'genre/list', result, 10800 );
+        res.json(result)
     }
-    res.json(result)
+    else {
+        const result = myCache.get( 'genre/list' );
+        res.json(result)
+    }
 })
 
 const getGenreCard = asyncHandler(async(req, res) => {
-    const id = req.params.id
-    res.json({message: `this is the ${id} Cards`})
+    const array = []
+    const param = req.params.id
+    const id = parseInt(param)
+    let { page } = req.query
+    if (!page) page=1;
+    const limit = 20
+    const skip = (page-1)*limit
+    const sort = { popularity: -1 }
+    const genres = await Genre.find({}, {type: 1}).lean()
+    genres.forEach( obj => {
+        array.push(obj._id)
+    })
+    if (array.includes(id)) {
+        const query = { "genres.id": id }
+        if (genres.find(x => x._id === id && x.type === 'movie only')) {
+            const count = await Card.find({}).where({ media_type: 'movie' }).where(query).countDocuments()
+            const result = await Card.find({}).where({ media_type: 'movie' }).where(query).sort(sort).skip(skip).limit(limit)
+            let hasNext
+            if (page < Math.ceil(count/20)) {
+                hasNext = true
+            }
+            else {
+                hasNext = false
+            }
+            const documents = {
+                numFound: count,
+                page: parseInt(page),
+                hasNext: hasNext,
+                results: result
+            }
+            res.json(documents)
+        }
+        else if (genres.find(x => x._id === id && x.type === 'tv only')) {
+            const count = await Card.find({}).where({ media_type: 'tv' }).where(query).countDocuments()
+            const result = await Card.find({}).where({ media_type: 'tv' }).where(query).sort(sort).skip(skip).limit(limit)
+            let hasNext
+            if (page < Math.ceil(count/20)) {
+                hasNext = true
+            }
+            else {
+                hasNext = false
+            }
+            const documents = {
+                numFound: count,
+                page: parseInt(page),
+                hasNext: hasNext,
+                results: result
+            }
+            res.json(documents)
+        }
+        else {
+            const count = await Card.find({}).where(query).countDocuments()
+            const result = await Card.find({}).where(query).sort(sort).skip(skip).limit(limit)
+            let hasNext
+            if (page < Math.ceil(count/20)) {
+                hasNext = true
+            }
+            else {
+                hasNext = false
+            }
+            const documents = {
+                numFound: count,
+                page: parseInt(page),
+                hasNext: hasNext,
+                results: result
+            }
+            res.json(documents)
+        }
+    }
+    else {
+        return res.status(409).json({ 
+            message: 'Please Provide One of The Following Type',
+            types: array
+        })
+    }
+    
 })
 
 module.exports = { getGenreList, getGenreCard }
