@@ -4,11 +4,15 @@ const express = require('express');
 const compression = require('compression');
 const connectDB = require('./config/dbConn')
 const mongoose = require('mongoose')
+const cors = require('cors')
+const corsOptions = require('./config/corsOptions')
 
 const app = express();
 const PORT = process.env.PORT || 3500
 
 connectDB()
+
+app.use(cors(corsOptions))
 
 app.use(compression({
     level: 6
