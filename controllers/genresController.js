@@ -99,7 +99,7 @@ async function main () {
     })
     const sorts = {name: 1}
     const result = await Genre.find({}).sort(sorts).lean()
-    result.unshift({ _id: 0, name: 'Popular & Latest'})
+    // result.unshift({ _id: 0, name: 'Popular & Latest'})
     return result
 }
 
