@@ -73,7 +73,7 @@ async function tv_only (res_tv, cross) {
         res_tv.splice(indexof, 1)
     });
     res_tv.map(obj => {
-        obj["type"] = "tv only"
+        obj["type"] = "show only"
     })
     return res_tv
 }
