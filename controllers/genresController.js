@@ -60,7 +60,7 @@ async function movie_only (res_movie, cross) {
         res_movie.splice(indexof, 1)
     });
     res_movie.map(obj => {
-        obj["type"] = "movie only"
+        obj["type"] = "movies"
     })
     return res_movie
 }
@@ -73,7 +73,7 @@ async function tv_only (res_tv, cross) {
         res_tv.splice(indexof, 1)
     });
     res_tv.map(obj => {
-        obj["type"] = "show only"
+        obj["type"] = "tv shows"
     })
     return res_tv
 }
