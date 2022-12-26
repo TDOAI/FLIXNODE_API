@@ -732,10 +732,10 @@
     "@aws-sdk/util-buffer-from" "3.208.0"
     tslib "^2.3.1"
 
-"@consumet/extensions@^1.2.12-rc":
-  version "1.2.12-rc"
-  resolved "https://registry.yarnpkg.com/@consumet/extensions/-/extensions-1.2.12-rc.tgz#3932d6018d349da6d82ec91aa2c1ca36e65f8041"
-  integrity sha512-iIalBpWMsKY447mYw+8g27ZMbDebIXGR2N4Q3qqSUvIOa5zmoSj6xdO0raNGR29GUfe5nms+itTu9PSdo8A/8g==
+"@consumet/extensions@1.2.11":
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/@consumet/extensions/-/extensions-1.2.11.tgz#98cf6a8a069233d119f92113df6d6c5c786a2acf"
+  integrity sha512-wONo26xHn95/LyLymqhExTS/QmaY7Q6Quocx27kMq+gCNaJL1C8/Jjarw+TKmgNHlF81ZlC9+ZeLTAHEH9MeOA==
   dependencies:
     ascii-url-encoder "^1.2.0"
     axios "^0.27.2"
