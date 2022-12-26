@@ -26,7 +26,8 @@ app.use('/', require('./routes/root'))
 app.use('/slider', require('./routes/sliderRoute'))
 app.use('/popular', require('./routes/popularRoutes'))
 app.use('/genre', require('./routes/genresRoute'))
-app.use('/tv', require('./routes/TVEpisodeCountRoute'))
+app.use('/tv', require('./routes/TVShowRoute'))
+app.use('/network', require('./routes/networksRoute'))
 
 app.all('*', (req, res) => {
     res.status(404)
