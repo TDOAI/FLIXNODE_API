@@ -16,7 +16,7 @@ const available_network = [
     },
     {
         name: "hbo",
-        id: 49,
+        id: 3186,
         list: [49, 3186, 5479, 2593, 1590, 1089, 1129]
     },
     {
@@ -43,6 +43,11 @@ const available_network = [
         name: "peacock",
         id: 3353,
         list: [3353]
+    },
+    {
+        name: "paramount",
+        id: 4330,
+        list: [4330, 2076, 2604, 5506, 5511, 5567, 6100, 6101, 6183, 6318, 6445]
     }
 ]
 
